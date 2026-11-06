@@ -2,6 +2,7 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
   pages: write
@@ -17,12 +18,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Ensure GitHub Pages is configured for Actions
+        continue-on-error: true
+        run: |
+          gh api repos/${{ github.repository }}/pages -X POST -f build_type=workflow || true
+          gh api repos/${{ github.repository }}/pages -X PUT -f build_type=workflow || true
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Setup Pages
+        id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
       - name: Upload
+        if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
       - name: Deploy
         id: deployment
+        if: steps.pages.outcome == 'success'
         uses: actions/deploy-pages@v4
+      - name: Fallback note
+        if: steps.pages.outcome != 'success'
+        run: |
+          echo "Pages not enabled yet. Enable once: Settings → Pages → Source: GitHub Actions"
+          echo "Meanwhile use htmlpreview URL for phones."
+          exit 1

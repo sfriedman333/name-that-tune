@@ -4,7 +4,9 @@ Live multiplayer Name That Tune for phones. Friends join a room, race to name th
 
 ## Play on phones (no install)
 
-**Open on every phone:** https://files.catbox.moe/2399p5.html
+**Open on every phone:** https://htmlpreview.github.io/?https://raw.githubusercontent.com/sfriedman333/name-that-tune/main/docs/index.html
+
+After Pages is enabled: https://sfriedman333.github.io/name-that-tune/
 
 Repo: https://github.com/sfriedman333/name-that-tune
 
