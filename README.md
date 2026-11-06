@@ -4,11 +4,11 @@ Live multiplayer Name That Tune for phones. Friends join a room, race to name th
 
 ## Play on phones (no install)
 
-**Open on every phone:** https://htmlpreview.github.io/?https://raw.githubusercontent.com/sfriedman333/name-that-tune/main/docs/index.html
+**Open on every phone:** https://sfriedman333.github.io/
 
-After Pages is enabled: https://sfriedman333.github.io/name-that-tune/
+Backup: https://raw.githack.com/sfriedman333/name-that-tune/main/docs/index.html
 
-Repo: https://github.com/sfriedman333/name-that-tune
+Source: https://github.com/sfriedman333/name-that-tune
 
 1. One person taps **Create room** and shares the 4-letter code.
 2. Friends **Join** with the code + a name.
@@ -18,16 +18,14 @@ This phone build is PeerJS P2P (no game server). Great for plane/hotel/bar demos
 
 ## Full server (Listen / AudD)
 
-On the box or a laptop:
-
 ```bash
-cd /workspace/name-that-tune   # or clone the repo
+cd /workspace/name-that-tune   # or: git clone https://github.com/sfriedman333/name-that-tune
 npm install
 # optional: echo 'AUDD_API_TOKEN=...' > .env
 npm start   # http://localhost:3847
 ```
 
-Public HTTPS from a laptop that can tunnel (box network blocks Cloudflare quick tunnels on port 7844):
+Public HTTPS from a laptop that can tunnel (this box blocks Cloudflare quick tunnels on port 7844):
 
 ```bash
 ./scripts/start-public.sh
@@ -40,7 +38,7 @@ Public HTTPS from a laptop that can tunnel (box network blocks Cloudflare quick 
 2. Put `AUDD_API_TOKEN=...` in `.env`
 3. Restart. Badge shows **AudD live ID**. Host taps **Listen**.
 
-Without a token, use **Demo** or **Manual reveal** on the Node client.
+Without a token, use **Demo** or **Manual reveal** on the Node client at port 3847.
 
 ## Known limits
 
@@ -48,4 +46,4 @@ Without a token, use **Demo** or **Manual reveal** on the Node client.
 - iPhone Safari mic needs HTTPS + permission (Node Listen mode).
 - Node rooms are in-memory (restart clears scores).
 - P2P room requires the host’s phone to stay on the page; PeerJS broker must be reachable.
-- GitHub Pages Actions deploy needs Pages enabled once in repo Settings → Pages → Source: GitHub Actions.
+- Box outbound tunnels (cloudflared/localtunnel/ngrok) are blocked here; use a laptop tunnel for AudD Listen with friends off-LAN.
