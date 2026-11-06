@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <title>Name That Tune</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="logo">♪ Name That Tune</div>
+      <div id="auddBadge" class="badge muted">Demo mode</div>
+    </header>
+
+    <!-- HOME -->
+    <section id="screen-home" class="screen">
+      <h1>Party game.<br/>Live music.</h1>
+      <p class="lede">Join friends in a room. When a song plays, race to name it. First correct guess wins the round.</p>
+      <label class="field">
+        <span>Your name</span>
+        <input id="nameInput" type="text" maxlength="24" placeholder="e.g. Scott" autocomplete="nickname" />
+      </label>
+      <div class="btn-row">
+        <button id="btnCreate" class="btn primary">Create room</button>
+      </div>
+      <div class="divider"><span>or join</span></div>
+      <label class="field">
+        <span>Room code</span>
+        <input id="codeInput" type="text" maxlength="6" placeholder="ABCD" autocomplete="off" autocapitalize="characters" />
+      </label>
+      <button id="btnJoin" class="btn secondary">Join room</button>
+      <p id="homeError" class="error" hidden></p>
+    </section>
+
+    <!-- LOBBY / GAME -->
+    <section id="screen-game" class="screen" hidden>
+      <div class="room-bar">
+        <div>
+          <div class="label">Room</div>
+          <div class="code" id="roomCode">----</div>
+        </div>
+        <div class="round-pill">Round <span id="roundNum">0</span></div>
+      </div>
+
+      <div id="phaseBanner" class="phase lobby">Waiting in lobby</div>
+
+      <div id="resultCard" class="result" hidden>
+        <div class="winner-line" id="winnerLine"></div>
+        <div class="track-line" id="trackLine"></div>
+      </div>
+
+      <div class="players">
+        <div class="label">Players</div>
+        <ul id="playerList"></ul>
+      </div>
+
+      <div id="hostPanel" class="host-panel" hidden>
+        <h3>Host controls</h3>
+        <p class="hint">Demo works anywhere (plane, hotel). Listen needs loud music + AudD token. Manual sets the answer when ID fails.</p>
+        <button id="btnDemo" class="btn primary block">Demo round</button>
+        <button id="btnListen" class="btn accent block">Listen (~6s mic)</button>
+        <button id="btnManual" class="btn secondary block">Manual reveal</button>
+        <button id="btnNext" class="btn ghost block" hidden>Next round</button>
+      </div>
+
+      <div id="guessPanel" class="guess-panel" hidden>
+        <label class="field">
+          <span>Your guess</span>
+          <input id="guessInput" type="text" maxlength="80" placeholder="Song title…" autocomplete="off" enterkeyhint="send" />
+        </label>
+        <button id="btnGuess" class="btn primary block">Submit guess</button>
+        <p id="guessFeedback" class="feedback"></p>
+      </div>
+
+      <div id="listenStatus" class="listen-status" hidden>
+        <div class="pulse"></div>
+        <p id="listenText">Listening…</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Demo modal -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card">
+      <h2 id="modalTitle">Demo round</h2>
+      <p id="modalHint" class="hint">Pick a song only you know. Everyone else races to type the title.</p>
+      <label class="field">
+        <span>Song title (answer)</span>
+        <input id="modalTitleInput" type="text" maxlength="80" placeholder="Blinding Lights" />
+      </label>
+      <label class="field">
+        <span>Artist (optional)</span>
+        <input id="modalArtistInput" type="text" maxlength="80" placeholder="The Weeknd" />
+      </label>
+      <div class="btn-row">
+        <button id="modalCancel" class="btn ghost">Cancel</button>
+        <button id="modalConfirm" class="btn primary">Start race</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
