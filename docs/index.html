@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <title>Name That Tune</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+:root{--bg:#0b0f1a;--bg2:#121826;--card:#171e2e;--line:#2a3348;--text:#f3f5fb;--muted:#9aa3b8;--accent:#7c5cff;--accent2:#22d3a6;--warn:#ffb020;--danger:#ff5c7a;--primary:#ff4fd8;--radius:16px;--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:"Space Grotesk",system-ui,-apple-system,sans-serif;min-height:100%;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(1200px 600px at 10% -10%,#2a1650 0%,transparent 55%),radial-gradient(900px 500px at 100% 0%,#0d3a3a 0%,transparent 50%),var(--bg)}
+#app{max-width:480px;margin:0 auto;padding:calc(16px + var(--safe-t)) 18px calc(28px + var(--safe-b));min-height:100dvh}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.logo{font-weight:700;letter-spacing:-.02em}.badge{font-size:.72rem;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--accent2)}
+h1{font-size:2.1rem;line-height:1.1;letter-spacing:-.03em;margin:0 0 12px}.lede{color:var(--muted);line-height:1.45;margin:0 0 22px}
+.field{display:block;margin-bottom:14px}.field span{display:block;font-size:.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:14px;font-size:1.05rem;font-family:inherit;outline:none}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.2)}
+#codeInput{font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.28em;text-transform:uppercase;text-align:center;font-size:1.35rem}
+.btn{appearance:none;border:none;border-radius:14px;padding:14px 18px;font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer}
+.btn:active{transform:scale(.98)}.btn.block{width:100%;margin-bottom:10px}
+.btn.primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff}
+.btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.8rem;margin:18px 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.error{color:var(--danger);margin-top:12px;font-size:.92rem}
+.room-bar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+.label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:1.8rem;letter-spacing:.22em;font-weight:600}
+.round-pill{background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:999px;font-size:.85rem;color:var(--muted)}
+.phase{border-radius:var(--radius);padding:18px 16px;text-align:center;font-weight:700;font-size:1.15rem;margin-bottom:16px;border:1px solid var(--line);background:var(--card)}
+.phase.lobby{color:var(--muted)}.phase.ready,.phase.guessing{color:#fff;background:linear-gradient(135deg,rgba(255,79,216,.25),rgba(124,92,255,.3));border-color:rgba(255,79,216,.4)}
+.phase.revealed{color:var(--accent2);border-color:rgba(34,211,166,.35)}
+.result{background:var(--bg2);border:1px solid rgba(34,211,166,.3);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px}
+.players{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:16px}
+.players ul{list-style:none;margin:8px 0 0;padding:0}
+.players li{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
+.players li:first-child{border-top:none}.players .score{font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--accent2)}
+.host-tag{font-size:.7rem;color:var(--accent);margin-left:8px}
+.host-panel,.guess-panel{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+.hint{color:var(--muted);font-size:.85rem;line-height:1.4;margin:0 0 12px}
+.feedback{min-height:1.2em;margin:8px 0 0;font-size:.92rem;color:var(--warn)}.feedback.ok{color:var(--accent2)}
+.modal{position:fixed;inset:0;background:rgba(5,8,16,.72);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;padding:16px;z-index:50}
+.modal[hidden]{display:none}.modal-card{width:min(480px,100%);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 16px calc(16px + var(--safe-b))}
+.modal .btn-row{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:8px}
+.status{font-size:.85rem;color:var(--muted);margin-top:8px}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="logo">♪ Name That Tune</div>
+      <div class="badge">Phone demo</div>
+    </header>
+    <section id="screen-home">
+      <h1>Party game.<br/>Live music.</h1>
+      <p class="lede">Same Wi‑Fi or cellular. Host creates a room; friends join with the code. Race to name the song.</p>
+      <label class="field"><span>Your name</span><input id="nameInput" maxlength="24" placeholder="e.g. Scott" autocomplete="nickname" /></label>
+      <button id="btnCreate" class="btn primary block">Create room</button>
+      <div class="divider"><span>or join</span></div>
+      <label class="field"><span>Room code</span><input id="codeInput" maxlength="6" placeholder="ABCD" autocapitalize="characters" /></label>
+      <button id="btnJoin" class="btn secondary block">Join room</button>
+      <p id="homeError" class="error" hidden></p>
+      <p class="status">P2P via PeerJS — works without a game server. Host uses Demo/Manual for the answer.</p>
+    </section>
+    <section id="screen-game" hidden>
+      <div class="room-bar">
+        <div><div class="label">Room</div><div class="code" id="roomCode">----</div></div>
+        <div class="round-pill">Round <span id="roundNum">0</span></div>
+      </div>
+      <div id="phaseBanner" class="phase lobby">Waiting in lobby</div>
+      <div id="resultCard" class="result" hidden>
+        <div id="winnerLine" style="font-weight:700;margin-bottom:4px"></div>
+        <div id="trackLine" style="color:var(--muted)"></div>
+      </div>
+      <div class="players"><div class="label">Players</div><ul id="playerList"></ul></div>
+      <div id="hostPanel" class="host-panel" hidden>
+        <h3 style="margin:0 0 6px;font-size:1rem">Host controls</h3>
+        <p class="hint">Demo: you secretly set the answer. Manual: paste what’s playing. Everyone races to type the title.</p>
+        <button id="btnDemo" class="btn primary block">Demo / Manual round</button>
+        <button id="btnNext" class="btn ghost block" hidden>Next round</button>
+      </div>
+      <div id="guessPanel" class="guess-panel" hidden>
+        <label class="field"><span>Your guess</span><input id="guessInput" maxlength="80" placeholder="Song title…" enterkeyhint="send" /></label>
+        <button id="btnGuess" class="btn primary block">Submit guess</button>
+        <p id="guessFeedback" class="feedback"></p>
+      </div>
+    </section>
+  </div>
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card">
+      <h2 style="margin:0 0 6px;font-size:1.25rem">Start round</h2>
+      <p class="hint">Enter the secret answer. Others race to type it. Fuzzy match OK.</p>
+      <label class="field"><span>Song title</span><input id="modalTitleInput" maxlength="80" placeholder="Blinding Lights" /></label>
+      <label class="field"><span>Artist (optional)</span><input id="modalArtistInput" maxlength="80" placeholder="The Weeknd" /></label>
+      <div class="btn-row">
+        <button id="modalCancel" class="btn ghost">Cancel</button>
+        <button id="modalConfirm" class="btn primary">Start race</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let peer = null, me = null, roomCode = null, isHost = false;
+  let players = {}; // id -> {id,name,score}
+  let conns = {}; // peerId -> DataConnection
+  let phase = 'lobby', round = 0, track = null, winner = null, guessingOpen = false, secret = null;
+
+  function normalizeTitle(s) {
+    return String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/\([^)]*\)/g,' ').replace(/\[[^\]]*\]/g,' ')
+      .replace(/\b(feat\.?|ft\.?|featuring|with|vs\.?|x)\b.*$/i,' ')
+      .replace(/^(the|a|an)\s+/i,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  }
+  function titlesMatch(guess, answer) {
+    const g = normalizeTitle(guess), a = normalizeTitle(answer);
+    if (!g || !a) return false;
+    if (g === a) return true;
+    if (g.length >= 4 && a.includes(g)) return true;
+    if (a.length >= 4 && g.includes(a)) return true;
+    const aTokens = a.split(' ').filter(Boolean);
+    const gSet = new Set(g.split(' ').filter(Boolean));
+    if (!aTokens.length) return false;
+    return aTokens.filter(t => gSet.has(t)).length / aTokens.length >= 0.8;
+  }
+  function makeCode() {
+    let c = '';
+    for (let i=0;i<4;i++) c += alphabet[Math.floor(Math.random()*alphabet.length)];
+    return c;
+  }
+  function saveName() {
+    const n = $('nameInput').value.trim() || 'Player';
+    try { localStorage.setItem('ntt_name', n); } catch(_){}
+    return n.slice(0,24);
+  }
+  try { const s = localStorage.getItem('ntt_name'); if (s) $('nameInput').value = s; } catch(_){}
+
+  function showError(msg){ $('homeError').hidden=!msg; $('homeError').textContent=msg||''; }
+  function broadcast(msg){ Object.values(conns).forEach(c => { try { c.send(msg); } catch(_){} }); }
+  function sendToHost(msg){ const h = Object.values(conns)[0]; if (h) h.send(msg); }
+
+  function render() {
+    $('screen-home').hidden = !!roomCode;
+    $('screen-game').hidden = !roomCode;
+    if (!roomCode) return;
+    $('roomCode').textContent = roomCode;
+    $('roundNum').textContent = String(round);
+    $('hostPanel').hidden = !isHost;
+    const list = $('playerList'); list.innerHTML='';
+    Object.values(players).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).forEach(p=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<div><span class="name"></span>${p.id===me?'':''}${isHost&&p.id===peer.id?'<span class="host-tag">HOST</span>':(players[peer.id]&&p.id===Object.keys(players).find(id=>players[id].isHost)?'':'')}</div><div class="score"></div>`;
+      // simpler:
+      li.textContent='';
+      const left=document.createElement('div');
+      const name=document.createElement('span'); name.textContent=p.name; left.appendChild(name);
+      if (p.isHost){ const t=document.createElement('span'); t.className='host-tag'; t.textContent='HOST'; left.appendChild(t); }
+      const score=document.createElement('div'); score.className='score'; score.textContent=String(p.score);
+      li.appendChild(left); li.appendChild(score); list.appendChild(li);
+    });
+    const banner=$('phaseBanner');
+    banner.className='phase '+phase;
+    const labels={lobby:'Waiting in lobby — host starts a round',ready:'Identified — GO!',guessing:'Name that tune!',revealed: winner? `${winner.name} won!`:'Round over'};
+    banner.textContent=labels[phase]||phase;
+    $('guessPanel').hidden = !(phase==='guessing'||phase==='ready');
+    $('guessInput').disabled = phase==='ready';
+    $('btnGuess').disabled = phase==='ready';
+    if (phase==='revealed' && track){
+      $('resultCard').hidden=false;
+      $('winnerLine').textContent = winner? `🏆 ${winner.name} named it!` : 'Round over';
+      $('trackLine').textContent = `${track.title}${track.artist? ' — '+track.artist:''}`;
+      $('btnNext').hidden=!isHost;
+    } else { $('resultCard').hidden=true; $('btnNext').hidden=true; }
+  }
+
+  function applySnapshot(s){
+    phase=s.phase; round=s.round; players=s.players; track=s.track; winner=s.winner; guessingOpen=s.guessingOpen;
+    if (phase==='guessing') setTimeout(()=>$('guessInput').focus(),50);
+    render();
+  }
+  function snapshot(){
+    return {type:'snapshot', phase, round, players, track: phase==='revealed'?track:{hidden:true}, winner, guessingOpen};
+  }
+  function wireConn(conn){
+    conns[conn.peer]=conn;
+    conn.on('data', (msg)=>onMessage(msg, conn));
+    conn.on('close', ()=>{ delete conns[conn.peer]; if(isHost && players[conn.peer]){ delete players[conn.peer]; broadcast(snapshot()); render(); }});
+  }
+  function onMessage(msg, conn){
+    if (!msg||!msg.type) return;
+    if (msg.type==='hello' && isHost){
+      players[msg.id]={id:msg.id,name:msg.name,score:players[msg.id]?.score||0,isHost:false};
+      broadcast(snapshot()); render();
+    } else if (msg.type==='snapshot' && !isHost){
+      applySnapshot(msg);
+    } else if (msg.type==='guess' && isHost && guessingOpen && secret){
+      const p=players[msg.id]; if(!p) return;
+      if (titlesMatch(msg.guess, secret.title)){
+        guessingOpen=false; phase='revealed'; p.score+=1;
+        winner={id:p.id,name:p.name}; track=secret;
+        broadcast(snapshot()); render();
+      } else {
+        conn.send({type:'guessResult', correct:false, message:'Nope — try again!'});
+      }
+    } else if (msg.type==='guessResult'){
+      const fb=$('guessFeedback'); fb.textContent=msg.message||''; fb.className='feedback';
+    }
+  }
+
+  function startPeer(id, openCb){
+    peer = new Peer(id, { debug:1 });
+    peer.on('open', openCb);
+    peer.on('error', (e)=>{
+      console.error(e);
+      if (String(e).includes('is taken')||e.type==='unavailable-id') showError('Code taken — try Create again');
+      else showError('Connection error: '+(e.message||e.type||e));
+    });
+    peer.on('connection', (conn)=>{
+      conn.on('open', ()=>wireConn(conn));
+    });
+  }
+
+  $('btnCreate').onclick = () => {
+    showError('');
+    const name=saveName();
+    const code=makeCode();
+    startPeer('ntt-'+code, ()=>{
+      roomCode=code; isHost=true; me=peer.id;
+      players={}; players[peer.id]={id:peer.id,name,score:0,isHost:true};
+      phase='lobby'; round=0; render();
+    });
+  };
+
+  $('btnJoin').onclick = () => {
+    showError('');
+    const name=saveName();
+    const code=$('codeInput').value.trim().toUpperCase();
+    if(!code) return showError('Enter a room code');
+    startPeer(undefined, ()=>{
+      roomCode=code; isHost=false; me=peer.id;
+      const conn=peer.connect('ntt-'+code, { reliable:true });
+      conn.on('open', ()=>{
+        wireConn(conn);
+        conn.send({type:'hello', id:peer.id, name});
+        players[peer.id]={id:peer.id,name,score:0,isHost:false};
+        render();
+      });
+      conn.on('error', ()=>showError('Could not join — check the code / host is in the room'));
+      setTimeout(()=>{ if(!Object.keys(conns).length) showError('Could not reach host. Ask them to keep the room open.'); }, 8000);
+    });
+  };
+
+  $('btnDemo').onclick = ()=>{ $('modal').hidden=false; setTimeout(()=>$('modalTitleInput').focus(),50); };
+  $('modalCancel').onclick = ()=>{$('modal').hidden=true;};
+  $('modalConfirm').onclick = ()=>{
+    const title=$('modalTitleInput').value.trim();
+    const artist=$('modalArtistInput').value.trim();
+    if(!title) return $('modalTitleInput').focus();
+    $('modal').hidden=true;
+    secret={title, artist: artist||'Unknown'};
+    round+=1; winner=null; phase='ready'; guessingOpen=false; track={hidden:true};
+    broadcast(snapshot()); render();
+    setTimeout(()=>{
+      phase='guessing'; guessingOpen=true;
+      broadcast(snapshot()); render();
+    }, 1200);
+  };
+  $('btnNext').onclick = ()=>{
+    phase='lobby'; secret=null; track=null; winner=null; guessingOpen=false;
+    broadcast(snapshot()); render();
+  };
+  function submitGuess(){
+    const guess=$('guessInput').value.trim(); if(!guess) return;
+    $('guessFeedback').textContent='';
+    if (isHost){
+      if (!guessingOpen||!secret) return;
+      const p=players[peer.id];
+      if (titlesMatch(guess, secret.title)){
+        guessingOpen=false; phase='revealed'; p.score+=1; winner={id:p.id,name:p.name}; track=secret;
+        broadcast(snapshot()); render();
+        $('guessFeedback').textContent='Correct!'; $('guessFeedback').className='feedback ok';
+      } else {
+        $('guessFeedback').textContent='Nope — try again!';
+      }
+    } else {
+      sendToHost({type:'guess', id:peer.id, guess});
+    }
+  }
+  $('btnGuess').onclick=submitGuess;
+  $('guessInput').addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
+})();
+  </script>
+</body>
+</html>
