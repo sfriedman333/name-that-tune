@@ -4,7 +4,11 @@ Live multiplayer Name That Tune for phones. Friends join a room, race to name th
 
 ## Play on phones (no install)
 
-**Static P2P demo (works now):** open the GitHub Pages / jsDelivr URL for `docs/index.html` on every phone.
+**Open on every phone:** https://files.catbox.moe/2399p5.html
+
+**Static P2P demo (works now):** https://raw.githack.com/sfriedman333/name-that-tune/main/docs/index.html
+
+Mirror: https://cdn.jsdelivr.net/gh/sfriedman333/name-that-tune@main/docs/index.html
 
 1. One person taps **Create room** and shares the 4-letter code.
 2. Friends **Join** with the code + a name.
