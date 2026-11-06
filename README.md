@@ -6,26 +6,26 @@ Live multiplayer Name That Tune for phones. Friends join a room, race to name th
 
 **Open on every phone:** https://files.catbox.moe/2399p5.html
 
-**Static P2P demo (works now):** https://raw.githack.com/sfriedman333/name-that-tune/main/docs/index.html
-
-Mirror: https://cdn.jsdelivr.net/gh/sfriedman333/name-that-tune@main/docs/index.html
+Repo: https://github.com/sfriedman333/name-that-tune
 
 1. One person taps **Create room** and shares the 4-letter code.
 2. Friends **Join** with the code + a name.
 3. Host taps **Demo / Manual round**, enters the song title (secretly), everyone races to type it. First correct guess wins; scores stack. Host taps **Next round**.
 
-This P2P build uses PeerJS (no game server). Great for plane/hotel/bar demos. Live mic ID needs the Node server + AudD token below.
+This phone build is PeerJS P2P (no game server). Great for plane/hotel/bar demos. Live mic ID needs the Node server + AudD token below.
 
 ## Full server (Listen / AudD)
 
+On the box or a laptop:
+
 ```bash
-cd name-that-tune
+cd /workspace/name-that-tune   # or clone the repo
 npm install
 # optional: echo 'AUDD_API_TOKEN=...' > .env
 npm start   # http://localhost:3847
 ```
 
-Public HTTPS from a laptop that can tunnel:
+Public HTTPS from a laptop that can tunnel (box network blocks Cloudflare quick tunnels on port 7844):
 
 ```bash
 ./scripts/start-public.sh
@@ -38,12 +38,12 @@ Public HTTPS from a laptop that can tunnel:
 2. Put `AUDD_API_TOKEN=...` in `.env`
 3. Restart. Badge shows **AudD live ID**. Host taps **Listen**.
 
-Without a token, use **Demo** or **Manual reveal**.
+Without a token, use **Demo** or **Manual reveal** on the Node client.
 
 ## Known limits
 
 - Live covers / karaoke / heavy remixes often fail music ID — use Manual.
-- iPhone Safari mic needs HTTPS + permission.
+- iPhone Safari mic needs HTTPS + permission (Node Listen mode).
 - Node rooms are in-memory (restart clears scores).
 - P2P room requires the host’s phone to stay on the page; PeerJS broker must be reachable.
-- Box network may block outbound tunnels (cloudflared port 7844); run the tunnel on a normal laptop if needed.
+- GitHub Pages Actions deploy needs Pages enabled once in repo Settings → Pages → Source: GitHub Actions.
